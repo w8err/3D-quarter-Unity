@@ -25,19 +25,26 @@ public class Enemy : MonoBehaviour
             Weapon weapon = other.GetComponent<Weapon>();
             curHealth -= weapon.damage;
             Vector3 reactVec = transform.position - other.transform.position;
-            StartCoroutine(OnDamage(reactVec, true));
+            StartCoroutine(OnDamage(reactVec, true, false));
         }
         else if(other.tag == "Bullet")
         {
             Bullet bullet = other.GetComponent<Bullet>();
             curHealth -= bullet.damage;
             Vector3 reactVec = transform.position - other.transform.position;
-            StartCoroutine(OnDamage(reactVec, false));
+            StartCoroutine(OnDamage(reactVec, false, false));
             Destroy(other.gameObject);
         }
     }
 
-    IEnumerator OnDamage(Vector3 reactVec, bool strongKnockback)
+    public void HitByGrenade(Vector3 explositionPos)
+    {
+        curHealth -= 100;
+        Vector3 reactVec = transform.position - explositionPos;
+        StartCoroutine(OnDamage(reactVec, false, true));
+    }
+
+    IEnumerator OnDamage(Vector3 reactVec, bool strongKnockback, bool isGrenade)
     {
         mat.color = Color.red;
         if (strongKnockback)
@@ -62,6 +69,15 @@ public class Enemy : MonoBehaviour
             mat.color = Color.gray;
             gameObject.layer = 12;
 
+            if(isGrenade)
+            {
+                reactVec = reactVec.normalized;
+                reactVec += Vector3.up * 3;
+
+                rigid.freezeRotation = false;
+                rigid.AddForce(reactVec * 5, ForceMode.Impulse);
+                rigid.AddTorque(reactVec * 15, ForceMode.Impulse);
+            }
             reactVec = reactVec.normalized;
 
             reactVec += Vector3.up;
