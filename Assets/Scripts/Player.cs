@@ -151,11 +151,11 @@ public class Player : MonoBehaviour
         if (hasGrenades == 0)
             return;
 
-        if(gDown && !isReload && !isSwap)
+        if (gDown && !isReload && !isSwap)
         {
             Ray ray = followCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit rayHit;
-            if (Physics.Raycast(ray, out rayHit, 100)) // out : return처럼 반환값을 주어진 변수에 저장하는 키워드
+            if (Physics.Raycast(ray, out rayHit, 100)) // out: 반환값을 주어진 변수에 저장하는 키워드
             {
                 Vector3 nextVec = rayHit.point - transform.position;
                 nextVec.y = 12;
@@ -338,10 +338,13 @@ public class Player : MonoBehaviour
                         health = maxHealth;
                     break;
                 case Item.Type.Grenade:
-                    grenades[hasGrenades].SetActive(true);
-                    hasGrenades += item.value;
-                    if (hasGrenades > maxHasGrenades)
-                        hasGrenades = maxHasGrenades;
+                    if (hasGrenades < maxHasGrenades)
+                    {
+                        grenades[hasGrenades].SetActive(true);
+                        hasGrenades++;
+                        if (hasGrenades > maxHasGrenades)
+                            hasGrenades = maxHasGrenades;
+                    }
                     break;
             }
             Destroy(other.gameObject);

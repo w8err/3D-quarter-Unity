@@ -43,7 +43,7 @@ public class Weapon : MonoBehaviour
         //2
         // yield return null; // 여러번 사용가능. 이거 wait 트리거처럼 쓰는거같음
 
-        yield return new WaitForSeconds(0.1f);  // 0.1초 대기
+        yield return new WaitForSeconds(0.2f);  // 0.1초 대기
         meleeArea.enabled = true;
         trailEffect.enabled = true;
 
@@ -63,7 +63,7 @@ public class Weapon : MonoBehaviour
             // #1. 총알 발사
             GameObject instantBullet = Instantiate(bullet, bulletPos.position, bulletPos.rotation);
             Rigidbody bulletRigid = instantBullet.GetComponent<Rigidbody>();
-            bulletRigid.velocity = bulletPos.forward * 50;
+            bulletRigid.velocity = bulletPos.forward * 300;
 
             // #2. 탄피 배출
             yield return null;
