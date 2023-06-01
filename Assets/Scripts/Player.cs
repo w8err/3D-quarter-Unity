@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
     bool isReload;
     bool isBorder;
     bool isFireReady = true;
+    bool isDamage;
 
 
     Vector3 moveVec;
@@ -46,6 +47,7 @@ public class Player : MonoBehaviour
 
     Rigidbody rigid;
     Animator anim;
+    MeshRenderer[] meshs;
 
     GameObject nearObject;
     Weapon equipWeapon;
@@ -57,6 +59,7 @@ public class Player : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
+        meshs = GetComponentsInChildren<MeshRenderer>();   // GetComponent(s)<<< s 가 붙는다 
     }
 
 
@@ -349,6 +352,42 @@ public class Player : MonoBehaviour
             }
             Destroy(other.gameObject);
         }
+        else if(other.tag == "EnemyBullet")
+        { if(!isDamage)
+            {
+                Bullet enemyBullet = other.GetComponent<Bullet>();
+                health -= enemyBullet.damage;
+                StartCoroutine(OnDamage());
+            }
+        }
+    }
+
+    IEnumerator OnDamage()
+    {
+        isDamage = true;
+        foreach(MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.red;
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        foreach (MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.white;
+        }
+        yield return new WaitForSeconds(0.1f);
+        foreach (MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.red;
+        }
+        yield return new WaitForSeconds(0.2f);
+        foreach (MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.white;
+        }
+        yield return new WaitForSeconds(0.5f);
+        isDamage = false;
     }
 
     void OnTriggerStay(Collider other)
