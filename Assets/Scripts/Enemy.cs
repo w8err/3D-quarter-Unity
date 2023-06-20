@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     public int curHealth;
     public Transform Target;
     public BoxCollider meleeArea;
+    public GameObject bullet;
     public bool isChase;        // 추적 결정
     public bool isAttack;       // 공격 결정
 
@@ -20,13 +21,18 @@ public class Enemy : MonoBehaviour
     NavMeshAgent nav;
     Animator anim;
 
-    private void Awake()
+private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
         mat = GetComponentInChildren<MeshRenderer>().material;
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
+        if (anim == null)
+        {
+            Debug.LogError("Animator component not found.");
+            return;
+        }
 
         Invoke("ChaseStart", 1.5f);
     }
@@ -70,9 +76,11 @@ public class Enemy : MonoBehaviour
                 break;
             case Type.B:
                 targetRadius = 1f;
-                targetRange = 10f;
+                targetRange = 12f;
                 break;
             case Type.C:
+                targetRadius = 0.5f;
+                targetRange = 25f;
                 break;
         }
 
@@ -93,7 +101,7 @@ public class Enemy : MonoBehaviour
 
         switch (enemyType)
         {
-            case Type.A:
+            case Type.A:    // 일반형 몬스터
                 isChase = false;
                 isAttack = true;
                 anim.SetBool("isAttack", true);
@@ -109,8 +117,8 @@ public class Enemy : MonoBehaviour
                 anim.SetBool("isAttack", false);
                 break;
 
-            case Type.B:
-                yield return new WaitForSeconds(0.2f);
+            case Type.B:    // 돌격형 몬스터
+                yield return new WaitForSeconds(0.1f);
                 rigid.AddForce(transform.forward * 20, ForceMode.Impulse);
                 meleeArea.enabled = true;
 
@@ -118,9 +126,25 @@ public class Enemy : MonoBehaviour
                 rigid.velocity = Vector3.zero;
                 meleeArea.enabled = false;
 
-                yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(3f);
                 break;
-            case Type.C:
+            case Type.C:    // 원거리형 몬스터
+                yield return new WaitForSeconds(0.5f); // 원하는 딜레이 설정
+                if (!isAttack) {
+                    isChase = false;
+                    isAttack = true;
+                    anim.SetBool("isAttack", true);
+                    yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length); // 공격 애니메이션 길이만큼 대기
+                    GameObject instantBullet = Instantiate(bullet, transform.position, transform.rotation);
+                    Rigidbody rigidBullet = instantBullet.GetComponent<Rigidbody>();
+                    Vector3 bulletDirection = (Target.position - transform.position).normalized;
+                    rigidBullet.AddForce(bulletDirection * 20, ForceMode.VelocityChange);
+
+                }
+                yield return new WaitForSeconds(2.0f);
+                isChase = true;
+                isAttack = false;
+                anim.SetBool("isAttack", false);
                 break;
         }
     }
