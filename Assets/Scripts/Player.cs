@@ -358,21 +358,24 @@ public class Player : MonoBehaviour
                 Bullet enemyBullet = other.GetComponent<Bullet>();
                 health -= enemyBullet.damage;
 
-                if (other.GetComponent<Rigidbody>() != null)
-                    Destroy(other.gameObject);
-
-                StartCoroutine(OnDamage());
+                bool isBossAtk = other.name == "Boss Melee Area";
+                StartCoroutine(OnDamage(isBossAtk));
             }
+            if (other.GetComponent<Rigidbody>() != null)
+                Destroy(other.gameObject);
         }
     }
 
-    IEnumerator OnDamage()
+    IEnumerator OnDamage(bool isBossAtk)
     {
         isDamage = true;
         foreach(MeshRenderer mesh in meshs)
         {
             mesh.material.color = Color.red;
         }
+
+        if (isBossAtk)
+            rigid.AddForce(transform.forward * -25, ForceMode.Impulse);
 
         yield return new WaitForSeconds(0.2f);
 
@@ -392,6 +395,8 @@ public class Player : MonoBehaviour
         }
         yield return new WaitForSeconds(0.5f);
         isDamage = false;
+        if (isBossAtk)
+            rigid.velocity = Vector3.zero;
     }
 
     void OnTriggerStay(Collider other)

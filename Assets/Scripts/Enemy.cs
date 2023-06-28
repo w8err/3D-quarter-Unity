@@ -5,27 +5,28 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public enum Type { A, B, C };
+    public enum Type { A, B, C, D };
     public Type enemyType;
     public int maxHealth;
     public int curHealth;
-    public Transform Target;
+    public Transform target;
     public BoxCollider meleeArea;
     public GameObject bullet;
     public bool isChase;        // 추적 결정
     public bool isAttack;       // 공격 결정
+    public bool isDead;         // Dead 판정
 
-    Rigidbody rigid;
-    BoxCollider boxCollider;
-    Material mat;
-    NavMeshAgent nav;
-    Animator anim;
+    public Rigidbody rigid;
+    public BoxCollider boxCollider;
+    public MeshRenderer[] meshs;
+    public NavMeshAgent nav;
+    public Animator anim;
 
 private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
-        mat = GetComponentInChildren<MeshRenderer>().material;
+        meshs = GetComponentsInChildren<MeshRenderer>();
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
         if (anim == null)
@@ -34,6 +35,7 @@ private void Awake()
             return;
         }
 
+        if(enemyType != Type.D)
         Invoke("ChaseStart", 1.5f);
     }
 
@@ -45,9 +47,9 @@ private void Awake()
 
     void Update()
     {
-        if(nav.enabled)
+        if(nav.enabled && enemyType != Type.D)
         {
-            nav.SetDestination(Target.position);
+            nav.SetDestination(target.position);
             nav.isStopped = !isChase;
         }
     }
@@ -65,34 +67,37 @@ private void Awake()
 
     void Targeting()
     {
-        float targetRadius = 1.5f;
-        float targetRange = 3f;
-
-        switch(enemyType)
+        if (!isDead && enemyType != Type.D)
         {
-            case Type.A:
-                targetRadius = 1.5f;
-                targetRange = 3f;
-                break;
-            case Type.B:
-                targetRadius = 1f;
-                targetRange = 12f;
-                break;
-            case Type.C:
-                targetRadius = 0.5f;
-                targetRange = 25f;
-                break;
-        }
+            float targetRadius = 1.5f;
+            float targetRange = 3f;
+
+            switch (enemyType)
+            {
+                case Type.A:
+                    targetRadius = 1.5f;
+                    targetRange = 3f;
+                    break;
+                case Type.B:
+                    targetRadius = 1f;
+                    targetRange = 12f;
+                    break;
+                case Type.C:
+                    targetRadius = 0.5f;
+                    targetRange = 25f;
+                    break;
+            }
 
 
-        RaycastHit[] rayHits = 
-            Physics.SphereCastAll(transform.position,
-                                  targetRadius,
-                                  transform.forward, targetRange,
-                                  LayerMask.GetMask("Player"));
-        if(rayHits.Length > 0 && !isAttack)
-        {
-            StartCoroutine(Attack());
+            RaycastHit[] rayHits =
+                Physics.SphereCastAll(transform.position,
+                                      targetRadius,
+                                      transform.forward, targetRange,
+                                      LayerMask.GetMask("Player"));
+            if (rayHits.Length > 0 && !isAttack)
+            {
+                StartCoroutine(Attack());
+            }
         }
     }
 
@@ -137,7 +142,7 @@ private void Awake()
                     yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length); // 공격 애니메이션 길이만큼 대기
                     GameObject instantBullet = Instantiate(bullet, transform.position, transform.rotation);
                     Rigidbody rigidBullet = instantBullet.GetComponent<Rigidbody>();
-                    Vector3 bulletDirection = (Target.position - transform.position).normalized;
+                    Vector3 bulletDirection = (target.position - transform.position).normalized;
                     rigidBullet.AddForce(bulletDirection * 20, ForceMode.VelocityChange);
 
                 }
@@ -183,7 +188,8 @@ private void Awake()
 
     IEnumerator OnDamage(Vector3 reactVec, bool strongKnockback, bool isGrenade)
     {
-        mat.color = Color.red;
+        foreach(MeshRenderer mesh in meshs)
+        mesh.material.color = Color.red;
         if (strongKnockback)
         {
             reactVec = reactVec.normalized;
@@ -198,12 +204,15 @@ private void Awake()
 
         if (curHealth > 0)
         {
-            mat.color = Color.white;
+            foreach (MeshRenderer mesh in meshs)
+                mesh.material.color = Color.white;
         }
         else
         {
-            mat.color = Color.gray;
+            foreach (MeshRenderer mesh in meshs)
+                mesh.material.color = Color.gray;
             gameObject.layer = 12;
+            isDead = true;
             isChase = false;
             nav.enabled = false;
             anim.SetTrigger("doDie");
@@ -221,7 +230,9 @@ private void Awake()
             reactVec = reactVec.normalized;
             reactVec += Vector3.up;
             rigid.AddForce(reactVec * 5, ForceMode.Impulse);
-            Destroy(gameObject, 3);
+
+            if (enemyType != Type.D)
+                Destroy(gameObject, 3);
         }
     }
 }

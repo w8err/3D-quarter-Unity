@@ -77,6 +77,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 0
+  isMelee: 0
+  isRock: 0
 --- !u!1 &8253174487670940189
 GameObject:
   m_ObjectHideFlags: 0
