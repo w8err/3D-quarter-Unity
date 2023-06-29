@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     public BoxCollider meleeArea;
     public GameObject bullet;
     public GameObject smallRock;
+    public GameObject[] ChildEnemy;
     public bool isChase;        // 추적 결정
     public bool isAttack;       // 공격 결정
     public bool isDead;         // Dead 판정

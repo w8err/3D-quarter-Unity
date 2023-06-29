@@ -25,17 +25,22 @@ public class BossSmallRock : Bullet
 
     IEnumerator SGainPower()
     {
-        while (!isShoot)
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                float launchForce = Random.Range(1, 3);
-                rigid.AddTorque(transform.forward * launchForce, ForceMode.Impulse);
-                float launchAngle = Random.Range(3, 4);
-                rigid.AddForce(transform.up * launchAngle, ForceMode.Impulse);
-            }
-            yield return null;
-        }
+        float xForce = Random.Range(50f, 400f);
+        float yForce = Random.Range(50f, 400f);
+        float zForce = Random.Range(-200f, 200f);
+        Vector3 torque = new Vector3(xForce, yForce, zForce);
+
+        rigid.AddForce(transform.forward * xForce, ForceMode.Impulse);
+        rigid.AddForce(transform.up * yForce, ForceMode.Impulse);
+        rigid.AddForce(transform.right * zForce, ForceMode.Impulse);
+        rigid.AddTorque(torque, ForceMode.Acceleration);
+
+        yield return null;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Destroy(gameObject, 3);
     }
 }
 

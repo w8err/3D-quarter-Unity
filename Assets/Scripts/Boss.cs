@@ -9,12 +9,15 @@ public class Boss : Enemy                           // »ó¼Ó ÁÖÀÇÁ¡! Awake()ÇÔ¼ö´
     public Transform missilePortA;
     public Transform missilePortB;
     public bool isLook;
-    
+    public GameObject[] childEnemy;
+
+
     Vector3 lookVec;
     Vector3 tauntVec;
 
     void Awake()
     {
+
         rigid = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
         meshs = GetComponentsInChildren<MeshRenderer>();
@@ -46,33 +49,39 @@ public class Boss : Enemy                           // »ó¼Ó ÁÖÀÇÁ¡! Awake()ÇÔ¼ö´
 
     IEnumerator Think()
     {
-        yield return new WaitForSeconds(0.1f);
+    yield return new WaitForSeconds(0.1f);
 
-        int ranAction = Random.Range(5, 6);
+    int ranAction = Random.Range(0,10);
         switch (ranAction)       // Switch¹®¿¡¼­ break¹®À» »ý·«ÇØ¼­ Á¶°ÇÀ» ´Ã¸± ¼ö ÀÖ´Ù.
         {
             case 0:
+                // ¸ó½ºÅÍ ¼ÒÈ¯ ÆÐÅÏ
+                //StartCoroutine(SpawnChild());
             case 1:
+            case 2:
+            case 3:
                 // ¹Ì»çÀÏ ÆÐÅÏ
                 StartCoroutine(MissileShot());
                 break;
-
-            case 2:
-            case 3:
+                  
+            case 4:
+            case 5:
+                // ÀÛÀº µ¹ ÆÐÅÏ
+                StartCoroutine(SmallRockShot());
+                break;
+            case 6:
+            case 7:
                 // Å« µ¹ ÆÐÅÏ
                 StartCoroutine(RockShot());
                 break;
 
-            case 4:
+            case 8:
+            case 9:
+            case 10:
                 // ³»·ÁÂï±â ÆÐÅÏ
                 StartCoroutine(Taunt());
                 break;
 
-            case 5:
-            case 6:
-                StartCoroutine(SmallRockShot());
-                // ÀÛÀº µ¹ ÆÐÅÏ
-                break;
         }
     }
 
@@ -90,6 +99,7 @@ public class Boss : Enemy                           // »ó¼Ó ÁÖÀÇÁ¡! Awake()ÇÔ¼ö´
         bossMissileA.target = target;
 
         yield return new WaitForSeconds(2f);
+
         StartCoroutine(Think());
     }
 
@@ -101,6 +111,7 @@ public class Boss : Enemy                           // »ó¼Ó ÁÖÀÇÁ¡! Awake()ÇÔ¼ö´
         yield return new WaitForSeconds(3f);
 
         isLook = true;
+
         StartCoroutine(Think());
     }
 
@@ -108,15 +119,15 @@ public class Boss : Enemy                           // »ó¼Ó ÁÖÀÇÁ¡! Awake()ÇÔ¼ö´
     {
         isLook = false;
         anim.SetTrigger("doBigShot");
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 15; i++)
         {
             Instantiate(smallRock, transform.position, transform.rotation);
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.1f);
         }
 
         yield return new WaitForSeconds(1.5f);
-
         isLook = true;
+
         StartCoroutine(Think());
     }
 
@@ -141,5 +152,10 @@ public class Boss : Enemy                           // »ó¼Ó ÁÖÀÇÁ¡! Awake()ÇÔ¼ö´
         boxCollider.enabled = true;        
         
         StartCoroutine(Think());
+    }
+
+    IEnumerator SpawnChild()
+    {
+        yield return null;
     }
 }
