@@ -59,11 +59,19 @@ public class Boss : Enemy                           // 상속 주의점! Awake()함수�
 
             case 2:
             case 3:
+                // 큰 돌 패턴
                 StartCoroutine(RockShot());
                 break;
 
             case 4:
+                // 내려찍기 패턴
                 StartCoroutine(Taunt());
+                break;
+
+            case 5:
+            case 6:
+
+                // 작은 돌 패턴
                 break;
         }
     }
@@ -86,6 +94,17 @@ public class Boss : Enemy                           // 상속 주의점! Awake()함수�
     }
 
     IEnumerator RockShot()
+    {
+        isLook = false;
+        anim.SetTrigger("doBigShot");
+        Instantiate(bullet, transform.position, transform.rotation);
+        yield return new WaitForSeconds(3f);
+
+        isLook = true;
+        StartCoroutine(Think());
+    }
+
+    IEnumerator SmallRockShot()
     {
         isLook = false;
         anim.SetTrigger("doBigShot");

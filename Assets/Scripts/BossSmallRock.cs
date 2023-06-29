@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class BossRock : Bullet
+public class BossSmallRock : Bullet
 {
     private float originalScaleValue;
     private float originalAngularPower;
@@ -15,17 +15,17 @@ public class BossRock : Bullet
     void Awake()
     {
         rigid = GetComponent<Rigidbody>();
-        StartCoroutine(GainPower());
-        StartCoroutine(GainPowerTimer());
+        StartCoroutine(SGainPower());
+        StartCoroutine(SGainPowerTimer());
     }
 
-    IEnumerator GainPowerTimer()
+    IEnumerator SGainPowerTimer()
     {
         yield return new WaitForSeconds(2.2f);
         isShoot = true;
     }
 
-    IEnumerator GainPower()
+    IEnumerator SGainPower()
     {
         originalScaleValue = scaleValue;
         originalAngularPower = angularPower;
