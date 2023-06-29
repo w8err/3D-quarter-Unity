@@ -53,8 +53,7 @@ public class Player : MonoBehaviour
     Weapon equipWeapon;
     int equipWeaponIndex = -1;
     float fireDelay;
-
-
+  
     void Awake()
     {
         rigid = GetComponent<Rigidbody>();
@@ -207,7 +206,7 @@ public class Player : MonoBehaviour
             anim.SetTrigger("doReload");
             isReload = true;
 
-            Invoke("ReloadOut", 2f);
+            Invoke("ReloadOut", 2.9f);
         }
     }
 

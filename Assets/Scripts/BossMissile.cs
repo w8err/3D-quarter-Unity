@@ -2,16 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class BossMissile : Bullet // 상속받는 클래스, 이 클래스는 자식 클래스가 됨
+public class BossMissile : Bullet
 {
     public Transform target;
-    NavMeshAgent nav;
+    UnityEngine.AI.NavMeshAgent nav;
     void Awake()
     {
         FindTarget();
-        nav = GetComponent<NavMeshAgent>();
+        nav = GetComponent<UnityEngine.AI.NavMeshAgent>();
     }
 
     void Update()
@@ -22,7 +21,7 @@ public class BossMissile : Bullet // 상속받는 클래스, 이 클래스는 자식 클래스가 
     private void FindTarget()
     {
         GameObject playerObject = GameObject.Find("Player");
-        if (playerObject == null)
+        if (playerObject != null)
         {
             target = playerObject.transform;
         }
