@@ -5,11 +5,9 @@ using UnityEngine;
 
 public class BossSmallRock : Bullet
 {
-    private float originalScaleValue;
-    private float originalAngularPower;
+    float originalScaleValue;
+    float originalAngularPower;
     Rigidbody rigid;
-    float angularPower = 2;
-    float scaleValue = 0.1f;
     bool isShoot = false;
 
     void Awake()
@@ -27,15 +25,15 @@ public class BossSmallRock : Bullet
 
     IEnumerator SGainPower()
     {
-        originalScaleValue = scaleValue;
-        originalAngularPower = angularPower;
-
         while (!isShoot)
         {
-            angularPower += 0.003f;
-            scaleValue += 0.0033f;
-            transform.localScale = Vector3.one * scaleValue;
-            rigid.AddTorque(transform.right * angularPower, ForceMode.Acceleration);
+            for (int i = 0; i < 5; i++)
+            {
+                float launchForce = Random.Range(1, 3);
+                rigid.AddTorque(transform.forward * launchForce, ForceMode.Impulse);
+                float launchAngle = Random.Range(3, 4);
+                rigid.AddForce(transform.up * launchAngle, ForceMode.Impulse);
+            }
             yield return null;
         }
     }

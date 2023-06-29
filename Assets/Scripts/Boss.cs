@@ -48,7 +48,7 @@ public class Boss : Enemy                           // »ó¼Ó ÁÖÀÇÁ¡! Awake()ÇÔ¼ö´
     {
         yield return new WaitForSeconds(0.1f);
 
-        int ranAction = Random.Range(0, 5);
+        int ranAction = Random.Range(5, 6);
         switch (ranAction)       // Switch¹®¿¡¼­ break¹®À» »ý·«ÇØ¼­ Á¶°ÇÀ» ´Ã¸± ¼ö ÀÖ´Ù.
         {
             case 0:
@@ -70,7 +70,7 @@ public class Boss : Enemy                           // »ó¼Ó ÁÖÀÇÁ¡! Awake()ÇÔ¼ö´
 
             case 5:
             case 6:
-
+                StartCoroutine(SmallRockShot());
                 // ÀÛÀº µ¹ ÆÐÅÏ
                 break;
         }
@@ -108,8 +108,13 @@ public class Boss : Enemy                           // »ó¼Ó ÁÖÀÇÁ¡! Awake()ÇÔ¼ö´
     {
         isLook = false;
         anim.SetTrigger("doBigShot");
-        Instantiate(bullet, transform.position, transform.rotation);
-        yield return new WaitForSeconds(3f);
+        for (int i = 0; i < 5; i++)
+        {
+            Instantiate(smallRock, transform.position, transform.rotation);
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        yield return new WaitForSeconds(1.5f);
 
         isLook = true;
         StartCoroutine(Think());
