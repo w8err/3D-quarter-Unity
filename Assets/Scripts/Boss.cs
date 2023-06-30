@@ -5,11 +5,12 @@ using UnityEngine.AI;
 
 public class Boss : Enemy                           // »ó¼Ó ÁÖÀÇÁ¡! Awake()ÇÔ¼ö´Â ÀÚ½Ä ½ºÅ©¸³Æ®¸¸ ´Üµ¶ ½ÇÇàÇÔ!
 {
+    public GameObject normalMissile;
     public GameObject missile;
     public Transform missilePortA;
     public Transform missilePortB;
     public bool isLook;
-    public GameObject[] childEnemy;
+    public GameObject[] childEnemy = new GameObject[3];
 
 
     Vector3 lookVec;
@@ -30,7 +31,7 @@ public class Boss : Enemy                           // »ó¼Ó ÁÖÀÇÁ¡! Awake()ÇÔ¼ö´
 
     void Update()
     {
-        if(isDead)
+        if (isDead)
         {
             StopAllCoroutines();    // ÀÌ ½ºÅ©¸³Æ®ÀÇ ¸ðµç ÄÚ·çÆ¾À» Á¤Áö
             return;
@@ -49,21 +50,25 @@ public class Boss : Enemy                           // »ó¼Ó ÁÖÀÇÁ¡! Awake()ÇÔ¼ö´
 
     IEnumerator Think()
     {
-    yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.1f);
 
-    int ranAction = Random.Range(0,10);
+        int ranAction = Random.Range(0, 0);
         switch (ranAction)       // Switch¹®¿¡¼­ break¹®À» »ý·«ÇØ¼­ Á¶°ÇÀ» ´Ã¸± ¼ö ÀÖ´Ù.
         {
             case 0:
-                // ¸ó½ºÅÍ ¼ÒÈ¯ ÆÐÅÏ
-                //StartCoroutine(SpawnChild());
+            // ¸ó½ºÅÍ ¼ÒÈ¯ ÆÐÅÏ
+            StartCoroutine(SpawnChild());
+                break;
             case 1:
             case 2:
+                // ÀÏ¹Ý ¹Ì»çÀÏ ÆÐÅÏ
+                StartCoroutine(normalMissileShot());
+                break;
             case 3:
                 // ¹Ì»çÀÏ ÆÐÅÏ
                 StartCoroutine(MissileShot());
                 break;
-                  
+
             case 4:
             case 5:
                 // ÀÛÀº µ¹ ÆÐÅÏ
@@ -103,6 +108,30 @@ public class Boss : Enemy                           // »ó¼Ó ÁÖÀÇÁ¡! Awake()ÇÔ¼ö´
         StartCoroutine(Think());
     }
 
+    IEnumerator normalMissileShot()
+    {
+        missilePortA.Translate(0, -5f, 0); missilePortB.Translate(0, -5f, 0);
+        anim.SetTrigger("doShot");
+        yield return new WaitForSeconds(0.2f);
+        GameObject normalMissileA = Instantiate(normalMissile, missilePortA.position, missilePortA.rotation);   // ¹Ì»çÀÏA »ý¼º
+        normalMissileA.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);                                    // ¹Ì»çÀÏA ½ºÄÉÀÏ Á¶Á¤
+        Rigidbody aRigidBullet = normalMissileA.GetComponent<Rigidbody>();
+        Vector3 aBulletADirection = (target.position - transform.position).normalized;
+        aRigidBullet.AddForce(aBulletADirection * 35, ForceMode.VelocityChange);
+
+        yield return new WaitForSeconds(0.3f);
+        GameObject normalMissileB = Instantiate(normalMissile, missilePortB.position, missilePortB.rotation);   // ¹Ì»çÀÏB »ý¼º
+        normalMissileB.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);                                    // ¹Ì»çÀÏB ½ºÄÉÀÏ Á¶Á¤
+        Rigidbody bRigidBullet = normalMissileB.GetComponent<Rigidbody>();
+        Vector3 bBulletADirection = (target.position - transform.position).normalized;
+        bRigidBullet.AddForce(bBulletADirection * 35, ForceMode.VelocityChange);
+
+        missilePortA.Translate(0, 5f, 0); missilePortB.Translate(0, 5f, 0);
+        yield return new WaitForSeconds(2f);
+
+        StartCoroutine(Think());
+
+    }
     IEnumerator RockShot()
     {
         isLook = false;
@@ -149,13 +178,39 @@ public class Boss : Enemy                           // »ó¼Ó ÁÖÀÇÁ¡! Awake()ÇÔ¼ö´
         yield return new WaitForSeconds(1f);
         isLook = true;
         nav.isStopped = true;
-        boxCollider.enabled = true;        
-        
+        boxCollider.enabled = true;
+
         StartCoroutine(Think());
     }
 
     IEnumerator SpawnChild()
     {
-        yield return null;
+        int randInt = Random.Range(0, 3); // 0ºÎÅÍ 2 »çÀÌÀÇ ·£´ýÇÑ Á¤¼ö °ª »ý¼º
+        isLook = false;
+        anim.SetTrigger("doBigShot");
+
+        yield return new WaitForSeconds(1f); // ¾à°£ÀÇ µô·¹ÀÌ
+
+        GameObject instantiatedEnemy = Instantiate(childEnemy[randInt],transform.position, transform.rotation);
+        Rigidbody rigidEnemy = instantiatedEnemy.GetComponent<Rigidbody>();
+
+        rigidEnemy.AddForce(new Vector3(0, 30, -30), ForceMode.Impulse);
+
+        Enemy enemyScript = instantiatedEnemy.GetComponent<Enemy>();
+        switch (randInt)
+        {
+            case 0:
+                enemyScript.enemyType = Enemy.Type.A;
+                break;
+            case 1:
+                enemyScript.enemyType = Enemy.Type.B;
+                break;
+            case 2:
+                enemyScript.enemyType = Enemy.Type.C;
+                break;
+        }
+        enemyScript.target = target.transform;
+        yield return new WaitForSeconds(3f);
+        StartCoroutine(Think());
     }
 }

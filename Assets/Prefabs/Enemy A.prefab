@@ -430,15 +430,14 @@ MonoBehaviour:
   maxHealth: 75
   curHealth: 75
   target: {fileID: 0}
-  meleeArea: {fileID: 0}
+  meleeArea: {fileID: 7330633373149349083}
   bullet: {fileID: 0}
   smallRock: {fileID: 0}
-  ChildEnemy: []
   isChase: 0
   isAttack: 0
   isDead: 0
   rigid: {fileID: 0}
-  boxCollider: {fileID: 0}
+  boxCollider: {fileID: 7330633373149349083}
   meshs: []
   nav: {fileID: 0}
   anim: {fileID: 0}

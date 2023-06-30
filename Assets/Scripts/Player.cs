@@ -286,6 +286,11 @@ public class Player : MonoBehaviour
 
                 Destroy(nearObject);
             }
+            else if(nearObject.tag == "Shop")
+            {
+                Shop shop = nearObject.GetComponent<Shop>();
+                shop.Enter(this);   // 자기자신에 접근할 때는 this 키워드 사용
+            }
         }
     }
 
@@ -400,7 +405,7 @@ public class Player : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Weapon")
+        if (other.tag == "Weapon" || other.tag == "Shop")
             nearObject = other.gameObject;
         else if (other.tag == "Item")
             nearObject = other.gameObject;
@@ -410,6 +415,12 @@ public class Player : MonoBehaviour
     {
         if (other.tag == "Weapon")
             nearObject = null;
+        else if (other.tag == "Shop")
+        {
+            Shop shop = nearObject.GetComponent<Shop>();
+            shop.Exit();
+            nearObject = null;
+        }
     }
 
 }

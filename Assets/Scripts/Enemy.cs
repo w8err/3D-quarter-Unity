@@ -13,7 +13,6 @@ public class Enemy : MonoBehaviour
     public BoxCollider meleeArea;
     public GameObject bullet;
     public GameObject smallRock;
-    public GameObject[] ChildEnemy;
     public bool isChase;        // 추적 결정
     public bool isAttack;       // 공격 결정
     public bool isDead;         // Dead 판정
@@ -125,7 +124,7 @@ private void Awake()
                 break;
 
             case Type.B:    // 돌격형 몬스터
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(2.0f);
                 rigid.AddForce(transform.forward * 20, ForceMode.Impulse);
                 meleeArea.enabled = true;
 

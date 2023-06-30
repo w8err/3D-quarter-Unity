@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class BossRock : Bullet
 {
-    private float originalScaleValue;
-    private float originalAngularPower;
     Rigidbody rigid;
     bool isShoot = false;
 
