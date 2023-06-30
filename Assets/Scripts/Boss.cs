@@ -52,7 +52,7 @@ public class Boss : Enemy                           // 상속 주의점! Awake()함수�
     {
         yield return new WaitForSeconds(0.1f);
 
-        int ranAction = Random.Range(0, 0);
+        int ranAction = Random.Range(0, 10);
         switch (ranAction)       // Switch문에서 break문을 생략해서 조건을 늘릴 수 있다.
         {
             case 0:
