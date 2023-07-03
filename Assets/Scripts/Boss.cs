@@ -52,18 +52,15 @@ public class Boss : Enemy                           // 상속 주의점! Awake()함수�
     {
         yield return new WaitForSeconds(0.1f);
 
-        int ranAction = Random.Range(0, 10);
+        int ranAction = Random.Range(0, 12);
         switch (ranAction)       // Switch문에서 break문을 생략해서 조건을 늘릴 수 있다.
         {
             case 0:
-            // 몬스터 소환 패턴
-            StartCoroutine(SpawnChild());
-                break;
             case 1:
-            case 2:
                 // 일반 미사일 패턴
                 StartCoroutine(normalMissileShot());
                 break;
+            case 2:
             case 3:
                 // 미사일 패턴
                 StartCoroutine(MissileShot());
@@ -82,7 +79,11 @@ public class Boss : Enemy                           // 상속 주의점! Awake()함수�
 
             case 8:
             case 9:
+                // 몬스터 소환 패턴
+                StartCoroutine(SpawnChild());
+                break;
             case 10:
+            case 11:
                 // 내려찍기 패턴
                 StartCoroutine(Taunt());
                 break;

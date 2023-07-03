@@ -4841,6 +4841,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiGroup: {fileID: 0}
   anim: {fileID: 6667210907119957860}
+  itemObj: []
+  itemPrice: 
+  itemPos: []
+  talkData: []
+  talkText: {fileID: 0}
 --- !u!1 &6667210906333833077
 GameObject:
   m_ObjectHideFlags: 0
@@ -4992,8 +4997,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6667210906751528304}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13, y: 0, z: -5.52}
+  m_LocalRotation: {x: 0, y: 0, z: 0.19253051, w: 0.981291}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5008,7 +5013,7 @@ Transform:
   - {fileID: 6667210907582312149}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 22.201}
 --- !u!1 &6667210906758277443
 GameObject:
   m_ObjectHideFlags: 0

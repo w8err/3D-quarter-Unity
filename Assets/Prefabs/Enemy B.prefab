@@ -118,7 +118,6 @@ MonoBehaviour:
   meleeArea: {fileID: 2764672804437886709}
   bullet: {fileID: 0}
   smallRock: {fileID: 0}
-  ChildEnemy: []
   isChase: 0
   isAttack: 0
   isDead: 0
