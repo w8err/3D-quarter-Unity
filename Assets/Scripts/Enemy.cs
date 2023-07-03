@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
     public GameObject bullet;
     public GameObject smallRock;
     public bool isChase;        // 추적 결정
-    public bool isAttack;       // 공격 결정
+    public bool isAttack = false;       // 공격 결정
     public bool isDead;         // Dead 판정
 
     public Rigidbody rigid;
@@ -68,7 +68,7 @@ private void Awake()
 
     void Targeting()
     {
-        if (!isDead && enemyType != Type.D)
+        if (!isDead && enemyType != Type.D && !isAttack)
         {
             float targetRadius = 1.5f;
             float targetRange = 3f;
@@ -88,15 +88,16 @@ private void Awake()
                     targetRange = 25f;
                     break;
             }
-
+            
 
             RaycastHit[] rayHits =
                 Physics.SphereCastAll(transform.position,
                                       targetRadius,
                                       transform.forward, targetRange,
                                       LayerMask.GetMask("Player"));
-            if (rayHits.Length > 0 && !isAttack)
+            if (rayHits.Length > 0)
             {
+                isAttack = true; // 공격 중인 상태로 변경
                 StartCoroutine(Attack());
             }
         }
@@ -108,32 +109,39 @@ private void Awake()
         switch (enemyType)
         {
             case Type.A:    // 일반형 몬스터
-                isChase = false;
-                isAttack = true;
-                anim.SetBool("isAttack", true);
-                yield return new WaitForSeconds(0.2f);
-                meleeArea.enabled = true;
+                if (meleeArea != null)
+                {
+                    isChase = false;
+                    isAttack = true;
+                    anim.SetBool("isAttack", true);
+                    yield return new WaitForSeconds(0.2f);
+                    meleeArea.enabled = true;
 
-                yield return new WaitForSeconds(1f);
-                meleeArea.enabled = false;
+                    yield return new WaitForSeconds(1f);
+                    meleeArea.enabled = false;
 
-                yield return new WaitForSeconds(1f);
-                isChase = true;
-                isAttack = false;
-                anim.SetBool("isAttack", false);
+                    yield return new WaitForSeconds(1f);
+                    isChase = true;
+                    isAttack = false;
+                    anim.SetBool("isAttack", false);
+                }
                 break;
+
 
             case Type.B:    // 돌격형 몬스터
-                yield return new WaitForSeconds(2.0f);
-                rigid.AddForce(transform.forward * 20, ForceMode.Impulse);
-                meleeArea.enabled = true;
+                    // 돌진 로직
+                    rigid.AddForce(transform.forward * 20, ForceMode.Impulse);
+                    meleeArea.enabled = true;
+                    yield return new WaitForSeconds(0.5f);
 
-                yield return new WaitForSeconds(0.5f);
-                rigid.velocity = Vector3.zero;
-                meleeArea.enabled = false;
+                     rigid.velocity = transform.forward * 10; // 일직선으로 빠르게 돌진
+                     yield return new WaitForSeconds(0.5f); // 0.5초 동안 돌진
+                     rigid.velocity = Vector3.zero; // 도착 후 정지
+                    meleeArea.enabled = false;
+                    // 3. 도착 후 쿨타임
+                    yield return new WaitForSeconds(5.0f);
+                    break;
 
-                yield return new WaitForSeconds(3f);
-                break;
             case Type.C:    // 원거리형 몬스터
                 yield return new WaitForSeconds(0.5f); // 원하는 딜레이 설정
                 if (!isAttack) {

@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public int enemyCntB;
     public int enemyCntC;
 
+
     // UI ¸Å´ÏÀú
     public GameObject menuPanel;
     public GameObject gamePanel;
