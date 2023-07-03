@@ -12,7 +12,6 @@ public class Weapon : MonoBehaviour
     public int maxAmmo;
     public int curAmmo;
 
-
     public BoxCollider meleeArea;
     public TrailRenderer trailEffect;
     public Transform bulletPos;

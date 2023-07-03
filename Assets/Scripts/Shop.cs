@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class Shop : MonoBehaviour
 {
+    public GameObject allGroup;
+    public GameObject uiObject;
+
     public RectTransform uiGroup;
     public Animator anim;
 
@@ -20,15 +23,18 @@ public class Shop : MonoBehaviour
 
     public void Enter(Player player)
     {
+        uiObject.SetActive(true);
         enterPlayer = player;
         uiGroup.anchoredPosition = Vector3.zero;
     }
 
     public void Exit()
     {
+        uiObject.SetActive(false);
         anim.SetTrigger("doHello");
         uiGroup.anchoredPosition = Vector3.down * 1000;
     }
+
     public void Buy(int index)
     {
         int price = itemPrice[index];
@@ -49,9 +55,9 @@ public class Shop : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             talkText.text = talkData[1];
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.4f);
             talkText.text = talkData[0];
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.4f);
         }
     }
 }

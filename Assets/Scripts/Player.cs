@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,11 +18,15 @@ public class Player : MonoBehaviour
     public int ammo;
     public int coin;
     public int health;
+    public int score;
 
     public int maxAmmo;
     public int maxCoin;
     public int maxHealth;
     public int maxHasGrenades;
+
+    // 현재 총알 상태
+    public int nowAmmo;
 
     bool wDown;
     bool jDown;
@@ -40,6 +45,7 @@ public class Player : MonoBehaviour
     bool isBorder;
     bool isFireReady = true;
     bool isDamage;
+    bool isShop;
 
 
     Vector3 moveVec;
@@ -50,7 +56,7 @@ public class Player : MonoBehaviour
     MeshRenderer[] meshs;
 
     GameObject nearObject;
-    Weapon equipWeapon;
+    public Weapon equipWeapon;
     int equipWeaponIndex = -1;
     float fireDelay;
   
@@ -59,11 +65,14 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
         meshs = GetComponentsInChildren<MeshRenderer>();   // GetComponent(s)<<< s 가 붙는다 
+        PlayerPrefs.SetInt("MaxScore", 352000);
+        
     }
 
 
     void Update()
     {
+        
         GetInput();
         Move();
         Turn();
@@ -182,7 +191,7 @@ public class Player : MonoBehaviour
         fireDelay += Time.deltaTime;
         isFireReady = equipWeapon.rate < fireDelay;
 
-        if(fDown && isFireReady && !isDodge && !isSwap &&!isJump)
+        if(fDown && isFireReady && !isDodge && !isSwap &&!isJump && !isShop)
         {
             equipWeapon.Use();
             anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
@@ -201,7 +210,7 @@ public class Player : MonoBehaviour
         if (ammo == 0)
             return;
 
-        if (rDown && !isJump && !isDodge && !isSwap && isFireReady)
+        if (rDown && !isJump && !isDodge && !isSwap && isFireReady && !isShop)
         {
             anim.SetTrigger("doReload");
             isReload = true;
@@ -213,14 +222,19 @@ public class Player : MonoBehaviour
     void ReloadOut()
     {
         int reAmmo = ammo < equipWeapon.maxAmmo ? ammo : equipWeapon.maxAmmo;
-        equipWeapon.curAmmo = reAmmo;
-        ammo -= reAmmo;
+        int maxReloadAmmo = equipWeapon.maxAmmo - equipWeapon.curAmmo; // 재장전 가능한 최대 총알 수
+
+        // 최대 재장전 가능한 총알 수와 playerAmmo에서 뺄 수 있는 총알 수 중 작은 값을 선택하여 재장전합니다.
+        int reloadAmmo = Mathf.Min(maxReloadAmmo, reAmmo);
+
+        equipWeapon.curAmmo += reloadAmmo; // 총알 재장전
+        ammo -= reloadAmmo; // playerAmmo에서 총알 제거
         isReload = false;
     }
 
     void Dodge()
     {
-        if(jDown && moveVec != Vector3.zero && !isJump && !isDodge && !isSwap) 
+        if(jDown && moveVec != Vector3.zero && !isJump && !isDodge && !isSwap && !isShop) 
         {
             dodgeVec = moveVec;
             speed *= 3;
@@ -249,7 +263,7 @@ public class Player : MonoBehaviour
 
         int weaponIndex = -1;
         if (sDown1) weaponIndex = 0;
-        if (sDown2) weaponIndex = 1;
+        if (sDown2) weaponIndex = 1; 
         if (sDown3) weaponIndex = 2;
 
         if((sDown1 || sDown2 || sDown3) && !isJump && !isDodge)
@@ -290,6 +304,7 @@ public class Player : MonoBehaviour
             {
                 Shop shop = nearObject.GetComponent<Shop>();
                 shop.Enter(this);   // 자기자신에 접근할 때는 this 키워드 사용
+                isShop = true;
             }
         }
     }
@@ -419,6 +434,7 @@ public class Player : MonoBehaviour
         {
             Shop shop = nearObject.GetComponent<Shop>();
             shop.Exit();
+            isShop = false;
             nearObject = null;
         }
     }
