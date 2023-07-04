@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     // UI 매니저
     public GameObject menuPanel;
     public GameObject gamePanel;
+    public GameObject overPanel;
     public TextMeshProUGUI maxScore;         // 기존 레거시 텍스트는 Text 자료형, 메시프로는 TextMeshProUGUI 써야함
     public TextMeshProUGUI stageTxt;
     public TextMeshProUGUI playTimeTxt;
@@ -53,6 +54,10 @@ public class GameManager : MonoBehaviour
     public RectTransform bossHealthGroup;
     public RectTransform bossHPBar;
 
+    // 게임오버 UI
+    public TextMeshProUGUI curScoreText;
+    public TextMeshProUGUI bestText;
+
     void Awake()
     {
         stage++;
@@ -69,6 +74,16 @@ public class GameManager : MonoBehaviour
         gamePanel.SetActive(true);
 
         player.gameObject.SetActive(true);
+    }
+
+    public void GameOver()
+    {
+        gamePanel.SetActive(false);
+        overPanel.SetActive(true);
+        curScoreText.text = curScoreText.text;
+
+        int maxScore = PlayerPrefs.GetInt("MaxScore");
+
     }
 
     public void StageStart()
