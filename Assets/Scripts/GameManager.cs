@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        stage++;
         maxScore.text = string.Format("{0:n0}", PlayerPrefs.GetInt("MaxScore"));
     }
 
@@ -126,6 +127,7 @@ public class GameManager : MonoBehaviour
         enemyBTxt.text = enemyCntB.ToString();
         enemyCTxt.text = enemyCntC.ToString();
 
+        if (boss != null)
         bossHPBar.localScale = new Vector3((float)boss.curHealth / boss.maxHealth, 1, 1);
     }
 

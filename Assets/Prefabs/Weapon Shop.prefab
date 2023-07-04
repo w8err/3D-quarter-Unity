@@ -5069,12 +5069,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec54765103a806645893773b2258f70d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  allGroup: {fileID: 8213944753227313607}
+  uiObject: {fileID: 0}
   uiGroup: {fileID: 0}
   anim: {fileID: 8213944753106961025}
-  itemObj: []
-  itemPrice: 
-  itemPos: []
-  talkData: []
+  itemObj:
+  - {fileID: 5116036405291886677, guid: 7fb1963054049054ea44a44ae6f06a36, type: 3}
+  - {fileID: 2226392742840579376, guid: c038e07dcfd51c645bd99f2865fff5a3, type: 3}
+  - {fileID: 2327013686746259647, guid: 599b6858018bbbb4294262af9317af61, type: 3}
+  itemPrice: f4010000dc050000ac0d0000
+  itemPos:
+  - {fileID: 8213944752835006234}
+  - {fileID: 8213944751981202299}
+  - {fileID: 8213944752015571029}
+  talkData:
+  - '  '
+  - "\uB3C8\uC774 \uBD80\uC871\uD574\uC6A9!"
   talkText: {fileID: 0}
 --- !u!1001 &8213944752197281943
 PrefabInstance:

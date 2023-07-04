@@ -4839,12 +4839,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec54765103a806645893773b2258f70d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  allGroup: {fileID: 6667210906751528304}
+  uiObject: {fileID: 0}
   uiGroup: {fileID: 0}
   anim: {fileID: 6667210907119957860}
-  itemObj: []
-  itemPrice: 
-  itemPos: []
-  talkData: []
+  itemObj:
+  - {fileID: 6461823094444632270, guid: 7624c6b79235659409c1cd5d0a0248e6, type: 3}
+  - {fileID: 5001032284442321569, guid: 6f52f772c23b5aa4b962fee21b79ebf9, type: 3}
+  - {fileID: 2065555311341071803, guid: e400c5a9bd199794885c52e3a9506dbc, type: 3}
+  itemPrice: e8030000b0040000d0070000
+  itemPos:
+  - {fileID: 6667210906333833076}
+  - {fileID: 6667210906758277442}
+  - {fileID: 6667210907582312149}
+  talkData:
+  - 
+  - "\uB3C8\uC774 \uBD80\uC871\uD574\uC6A9 \u3160"
   talkText: {fileID: 0}
 --- !u!1 &6667210906333833077
 GameObject:
