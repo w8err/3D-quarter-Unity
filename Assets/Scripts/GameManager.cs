@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class GameManager : MonoBehaviour
     public int enemyCntB;
     public int enemyCntC;
 
+    public Transform[] enemyZones;
+    public GameObject[] enemies;
+    public List<int> enemyList;
 
     // UI 매니저
     public GameObject menuPanel;
@@ -51,6 +55,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         stage++;
+        enemyList = new List<int>();
         maxScore.text = string.Format("{0:n0}", PlayerPrefs.GetInt("MaxScore"));
     }
 
@@ -71,14 +76,21 @@ public class GameManager : MonoBehaviour
         weaponShop.SetActive(false);
         startZone.SetActive(false);
         isBattle = true;
+
+        foreach(Transform zone in enemyZones)
+            zone.gameObject.SetActive(true);
+
         StartCoroutine(InBattle());
     }
     public void StageEnd()
-    {
+    { 
         itemShop.SetActive(true);
         weaponShop.SetActive(true);
         startZone.SetActive(true);
-        
+
+        foreach (Transform zone in enemyZones)
+            zone.gameObject.SetActive(false);
+
         isBattle = false;
         stage++;
 
@@ -87,8 +99,21 @@ public class GameManager : MonoBehaviour
 
     IEnumerator InBattle()
     {
-        yield return new WaitForSeconds(5);
-        StageEnd();
+        for(int index = 0; index < stage; index++)
+        {
+            int ran = Random.Range(0, 3);
+            enemyList.Add(ran);
+        }
+
+        while(enemyList.Count > 0)
+        {
+            int ranzZone = Random.Range(0, 4);
+            GameObject instantEnemy = Instantiate(enemies[enemyList[0]], enemyZones[ranzZone].position, enemyZones[ranzZone].rotation);     // 프리팹은 SCENE에 올라온 오브젝트에 접근 불가
+            Enemy enemy = instantEnemy.GetComponent<Enemy>();
+            enemy.target = player.transform;
+            enemyList.RemoveAt(0);
+            yield return new WaitForSeconds(4f);
+        }
     }
 
     void Update()

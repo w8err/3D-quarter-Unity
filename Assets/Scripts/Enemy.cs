@@ -9,9 +9,13 @@ public class Enemy : MonoBehaviour
     public Type enemyType;
     public int maxHealth;
     public int curHealth;
+    public int score;
+
     public Transform target;
     public BoxCollider meleeArea;
     public GameObject bullet;
+    public GameObject[] coins;
+
     public GameObject smallRock;
     public bool isChase;        // 추적 결정
     public bool isAttack = false;       // 공격 결정
@@ -216,6 +220,7 @@ private void Awake()
             foreach (MeshRenderer mesh in meshs)
                 mesh.material.color = Color.white;
         }
+        // 사망하는 구간
         else
         {
             foreach (MeshRenderer mesh in meshs)
@@ -225,6 +230,12 @@ private void Awake()
             isChase = false;
             nav.enabled = false;
             anim.SetTrigger("doDie");
+
+            Player player = target.GetComponent<Player>();
+            player.score += score;
+            int ranCoin = Random.Range(0, 3);
+            Instantiate(coins[ranCoin], transform.position, Quaternion.identity);
+
 
             if (isGrenade)
             {
@@ -240,8 +251,7 @@ private void Awake()
             reactVec += Vector3.up;
             rigid.AddForce(reactVec * 5, ForceMode.Impulse);
 
-            if (enemyType != Type.D)
-                Destroy(gameObject, 3);
+             Destroy(gameObject, 4);
         }
     }
 }
