@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  value: 10
+  value: 1000
 --- !u!1 &4043830532676186725
 GameObject:
   m_ObjectHideFlags: 0

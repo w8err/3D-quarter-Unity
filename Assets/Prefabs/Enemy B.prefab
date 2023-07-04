@@ -576,6 +576,7 @@ MonoBehaviour:
   maxHealth: 100
   curHealth: 100
   score: 250
+  manager: {fileID: 0}
   target: {fileID: 0}
   meleeArea: {fileID: 1721984081452634582}
   bullet: {fileID: 0}
@@ -588,7 +589,7 @@ MonoBehaviour:
   isAttack: 0
   isDead: 0
   rigid: {fileID: 0}
-  boxCollider: {fileID: 0}
+  boxCollider: {fileID: 1721984081452634582}
   meshs: []
   nav: {fileID: 0}
   anim: {fileID: 0}

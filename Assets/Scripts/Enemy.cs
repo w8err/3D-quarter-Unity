@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     public int maxHealth;
     public int curHealth;
     public int score;
+    public GameManager manager;
 
     public Transform target;
     public BoxCollider meleeArea;
@@ -215,12 +216,14 @@ private void Awake()
         }
         yield return new WaitForSeconds(0.13f);
 
+        // 피격 판정
         if (curHealth > 0)
         {
             foreach (MeshRenderer mesh in meshs)
                 mesh.material.color = Color.white;
         }
-        // 사망하는 구간
+        
+        // 몬스터 사망
         else
         {
             foreach (MeshRenderer mesh in meshs)
@@ -235,6 +238,22 @@ private void Awake()
             player.score += score;
             int ranCoin = Random.Range(0, 3);
             Instantiate(coins[ranCoin], transform.position, Quaternion.identity);
+
+            switch(enemyType)
+            {
+                case Type.A:
+                    manager.enemyCntA--;
+                    break;
+                case Type.B:
+                    manager.enemyCntB--;
+                    break;
+                case Type.C:
+                    manager.enemyCntC--;
+                    break;
+                case Type.D:
+                    manager.enemyCntD--;
+                    break;
+            }
 
 
             if (isGrenade)
