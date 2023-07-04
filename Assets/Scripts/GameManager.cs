@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using TMPro;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,10 @@ public class GameManager : MonoBehaviour
     public GameObject gameCam;
     public Player player;
     public Boss boss;
+    public GameObject itemShop;
+    public GameObject weaponShop;
+    public GameObject startZone;
+
     public int stage;
     public float playTime;
     public bool isBattle;
@@ -57,6 +62,32 @@ public class GameManager : MonoBehaviour
         gamePanel.SetActive(true);
 
         player.gameObject.SetActive(true);
+    }
+
+    public void StageStart()
+    {
+        itemShop.SetActive(false);
+        weaponShop.SetActive(false);
+        startZone.SetActive(false);
+        isBattle = true;
+        StartCoroutine(InBattle());
+    }
+    public void StageEnd()
+    {
+        itemShop.SetActive(true);
+        weaponShop.SetActive(true);
+        startZone.SetActive(true);
+        
+        isBattle = false;
+        stage++;
+
+        player.transform.position = Vector3.up * 0.8f;
+    }
+
+    IEnumerator InBattle()
+    {
+        yield return new WaitForSeconds(5);
+        StageEnd();
     }
 
     void Update()
